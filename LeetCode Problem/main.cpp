@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+using namespace std;
 
 /*=====================================================================================================
  Arithmetic progression
@@ -140,5 +141,124 @@ public:
         }
 
         return res;
+    }
+};
+
+
+
+
+/*=====================================================================================================
+ Problème 7: generation of all the permutations
+ =====================================================================================================*/
+
+class Solution7 {
+public:
+    void permute(vector<int>& v, int pos, vector<vector<int>>& res) {
+        if (pos == v.size()) {
+            res.push_back(v);
+            return;
+        }
+
+        for (int i = pos; i < v.size(); i++) {
+            swap(v[pos], v[i]);          // choisir
+            permute(v, pos + 1, res);    // explorer
+            swap(v[pos], v[i]);          // annuler
+        }
+    }
+
+    vector<vector<int>> generatePermutations(int n) {
+        vector<int> v(n);
+        for (int i = 0; i < n; i++) v[i] = i + 1;
+
+        vector<vector<int>> res;
+        permute(v, 0, res);
+        return res;
+    }
+};
+
+
+/*=====================================================================================================
+ Problème 8: The set [1, 2, 3, ..., n] contains a total of n! unique permutations.
+ By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+ "123"
+ "132"
+ "213"
+ "231"
+ "312"
+ "321"
+ Given n and k, return the kth permutation sequence.
+ =====================================================================================================*/
+
+
+#include <vector>
+#include <string>
+using namespace std;
+
+class Solution8 {
+public:
+    string getPermutation(int n, int k) {
+        vector<int> listn;
+        vector<int> fact(n + 1, 1);
+
+        for (int i = 1; i <= n; i++) {
+            listn.push_back(i);
+        }
+
+        for (int i = 1; i <= n; i++) {
+            fact[i] = fact[i - 1] * i;
+        }
+
+        k--;
+
+        string result = "";
+
+        for (int i = n; i >= 1; i--) {
+            int blockSize = fact[i - 1];
+            int index = k / blockSize;
+
+            result += to_string(listn[index]);
+            listn.erase(listn.begin() + index);
+
+            k %= blockSize;
+        }
+
+        return result;
+    }
+};
+
+
+/*=====================================================================================================
+ Problème 9: Pascal triangle
+ =====================================================================================================*/
+
+
+class Solution9 {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> result;
+
+        vector<int> temp;
+        for (int i=0;i<numRows; i=i+1){
+            if (i==0){
+                temp.push_back(1);
+                result.push_back(temp);
+            }
+            else{
+
+                for (int j=0;j<=i ;j=j+1){
+                    if (j==0){
+                        temp[j] = 1;
+                    }
+                    else if (j==i){
+                        temp.push_back(1);
+                    }
+                    else{
+                        temp[j] = result[i-1][j-1] + result[i-1][j];
+                    }
+                }
+                result.push_back(temp);
+            }
+        }
+        return result;
     }
 };
